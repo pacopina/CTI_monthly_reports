@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - '**.html'
-      - 'generar_index.py'
+      - 'Scripts/generar_index.py'
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
         python-version: '3.x'
 
     - name: Ejecutar script de generación
-      run: python generar_index.py
+      run: python Scripts/generar_index.py
 
     - name: Subir cambios a GitHub
       run: |
