@@ -1,0 +1,31 @@
+name: Generar index.html
+
+on:
+  push:
+    paths:
+      - '**.html'
+      - 'generar_index.py'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Clonar el repositorio
+      uses: actions/checkout@v4
+
+    - name: Configurar Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Ejecutar script de generación
+      run: python generar_index.py
+
+    - name: Subir cambios a GitHub
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add index.html
+        git commit -m "🤖 Generar index.html automáticamente" || echo "Sin cambios"
+        git push
