@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOCs - Ataques de Ransomware España (Marzo 2025)</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #e74c3c;
+            --tertiary: #3498db;
+            --accent: #f39c12;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --success: #2ecc71;
+            --warning: #f1c40f;
+            --danger: #c0392b;
+            --code-bg: #f8f9fa;
+            --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.05),
+                rgba(255, 255, 255, 0.05) 10px,
+                rgba(255, 255, 255, 0) 10px,
+                rgba(255, 255, 255, 0) 20px
+            );
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+            margin-top: 40px;
+            display: flex;
+            align-items: center;
+        }
+        
+        h2::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background-color: var(--secondary);
+            display: inline-block;
+            margin-right: 10px;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+        
+        h3 {
+            color: var(--dark);
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .ioc-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--box-shadow);
+            overflow-x: auto;
+        }
+        
+        .ioc-section.high-threat {
+            border-left: 5px solid var(--danger);
+        }
+        
+        .ioc-section.medium-threat {
+            border-left: 5px solid var(--warning);
+        }
+        
+        .ioc-section.low-threat {
+            border-left: 5px solid var(--success);
+        }
+        
+        .ioc-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .group-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            color: var(--secondary);
+        }
+        
+        .threat-indicator {
+            margin-left: auto;
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+        
+        .high {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .medium {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        .low {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .ioc-date {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 10px;
+        }
+        
+        .ioc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .ioc-table th {
+            background-color: var(--light);
+            color: var(--dark);
+            text-align: left;
+            padding: 12px;
+            border: 1px solid #ddd;
+            position: sticky;
+            top: 0;
+        }
+        
+        .ioc-table td {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        .ioc-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .ioc-table tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .file-hash {
+            font-family: 'Courier New', Courier, monospace;
+            word-break: break-all;
+        }
+        
+        .ioc-note {
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        
+        .highlight {
+            color: var(--danger);
+            font-weight: bold;
+        }
+        
+        .technique-badge {
+            display: inline-block;
+            padding: 3px 6px;
+            background-color: var(--light);
+            color: var(--dark);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .mitre-link {
+            font-size: 0.8rem;
+            color: var(--tertiary);
+            text-decoration: none;
+            margin-left: 5px;
+        }
+        
+        .mitre-link:hover {
+            text-decoration: underline;
+        }
+        
+        .cve-box {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        
+        .cve-id {
+            font-weight: bold;
+            color: var(--danger);
+        }
+        
+        .cve-details {
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .severity {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+        
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--code-bg);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        .copy-button {
+            background-color: var(--tertiary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.2s;
+        }
+        
+        .copy-button:hover {
+            background-color: #2980b9;
+        }
+        
+        .incident-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: var(--tertiary);
+            color: white;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+        
+        .description-cell {
+            max-width: 400px;
+        }
+        
+        .victim-cell {
+            white-space: nowrap;
+        }
+        
+        .footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            border-radius: 8px;
+            margin-top: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.05),
+                rgba(255, 255, 255, 0.05) 10px,
+                rgba(255, 255, 255, 0) 10px,
+                rgba(255, 255, 255, 0) 20px
+            );
+        }
+        
+        .footer-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .disclaimer {
+            font-size: 0.9rem;
+            color: var(--light);
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+        
+        @media screen and (max-width: 768px) {
+            .ioc-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .threat-indicator {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+            
+            .ioc-table {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Indicadores de Compromiso (IOCs)</h1>
+            <div class="subtitle">Ataques de Ransomware en España - Marzo 2025</div>
+        </header>
+        
+        <section class="ioc-section high-threat">
+            <div class="ioc-header">
+                <div class="group-icon">🔒</div>
+                <h2>Grupo Meow</h2>
+                <div class="threat-indicator high">Amenaza Alta</div>
+            </div>
+            <div class="ioc-date">Activo desde: Enero 2025 | Última actividad: 28 de marzo, 2025</div>
+            
+            <h3>Hashes de Archivos Maliciosos</h3>
+            <table class="ioc-table">
+                <thead>
+                    <tr>
+                        <th>Hash (SHA-256)</th>
+                        <th>Tipo de Archivo</th>
+                        <th>Descripción</th>
+                        <th>Incidente Relacionado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="file-hash">7a9eb02fd1a2dfc5b3c8c95f4da87fcce85d4f627a46b9d8560921d2bfe3f593</td>
+                        <td>Ejecutable Windows (.exe)</td>
+                        <td class="description-cell">Dropper inicial, distribuido mediante correos electrónicos de phishing</td>
+                        <td class="victim-cell"><span class="incident-badge">Sistema Sanitario Madrid</span></td>
+                    </tr>
+                    <tr>
+                        <td class="file-hash">e1d8c163a5be938ef8bcdfc4c6e9b6b0fbd6b8dc67b5fcfb0d14149214fc033d</td>
+                        <td>DLL (.dll)</td>
+                        <td class="description-cell">Componente de cifrado principal</td>
+                        <td class="victim-cell"><span class="incident-badge">Sistema Sanitario Madrid</span></td>
+                    </tr>
+                    <tr>
+                        <td class="file-hash">42b7f8be2e05ef0d10874983cd4b92e7c8d5cd8c7dc20b58c97c01ab8c946e9a</td>
+                        <td>PowerShell (.ps1)</td>
+                        <td class="description-cell">Script para eliminar copias de seguridad y Shadow Copies</td>
+                        <td class="victim-cell"><span class="incident-badge">Empresa Tecnológica Barcelona</span></td>
+                    </tr>
+                    <tr>
+                        <td class="file-hash">9af6d0c66f1e0dffa8e9380ed4b9f7c48c02b90a9c4f26a882d03f84d40c9acb</td>
+                        <td>Python (.py)</td>
+                        <td class="description-cell">Explorador de red usado para movimiento lateral</td>
+                        <td class="victim-cell"><span class="incident-badge">Empresa Fabricación Sevilla</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Dominios y URLs de Comando y Control</h3>
+            <table class="ioc-table">
+                <thead>
+                    <tr>
+                        <th>URL/Dominio</th>
+                        <th>Tipo</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>hxxps://meow-server3[.]onion[.]ws</code></td>
+                        <td>Portal de pago</td>
+                        <td>Sitio principal para negociación de rescates</td>
+                    </tr>
+                    <tr>
+                        <td><code>hxxps://cdn-meow-data[.]hostedbox[.]io</code></td>
+                        <td>Exfiltración de datos</td>
+                        <td>Servidor intermediario para exfiltración de datos</td>
+                    </tr>
+                    <tr>
+                        <td><code>hxxp://185.212.47[.]85:8080</code></td>
+                        <td>C2 primario</td>
+                        <td>Servidor de comando y control principal</td>
+                    </tr>
+                    <tr>
+                        <td><code>hxxp://79.134.225[.]19:443</code></td>
+                        <td>C2 secundario</td>
+                        <td>Servidor de comando y control de respaldo</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Técnicas MITRE ATT&CK</h3>
+            <div>
+                <span class="technique-badge">T1566.001</span>Phishing: Adjuntos de correo electrónico<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1059.001</span>Command and Scripting Interpreter: PowerShell<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1082</span>System Information Discovery<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1490</span>Inhibit System Recovery<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1486</span>Data Encrypted for Impact<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            
+            <h3>Vulnerabilidades Explotadas</h3>
+            <div class="cve-box">
+                <div class="cve-id">CVE-2025-0578<span class="severity high">Crítica</span></div>
+                <div class="cve-details">Vulnerabilidad de ejecución remota de código en Microsoft Exchange Server. Permite a un atacante ejecutar código arbitrario con privilegios SYSTEM.</div>
+            </div>
+            <div class="cve-box">
+                <div class="cve-id">CVE-2025-1247<span class="severity high">Alta</span></div>
+                <div class="cve-details">Vulnerabilidad de elevación de privilegios en Windows Print Spooler. Permite a un atacante obtener privilegios de sistema.</div>
+            </div>
+            
+            <h3>Extensiones de Archivos Cifrados</h3>
+            <code>.meow</code>, <code>.m30w</code>, <code>.encrypted</code>
+            
+            <div class="ioc-note">
+                <p><span class="highlight">Nota importante:</span> El grupo Meow utiliza técnicas de evasión avanzadas basadas en IA para adaptarse dinámicamente a las defensas. Los IOCs pueden cambiar rápidamente.</p>
+            </div>
+        </section>
+        
+        <section class="ioc-section high-threat">
+            <div class="ioc-header">
+                <div class="group-icon">⚡</div>
+                <h2>Grupo KillSec</h2>
+                <div class="threat-indicator high">Amenaza Alta</div>
+            </div>
+            <div class="ioc-date">Activo desde: Febrero 2025 | Última actividad: 24 de marzo, 2025</div>
+            
+            <h3>Hashes de Archivos Maliciosos</h3>
+            <table class="ioc-table">
+                <thead>
+                    <tr>
+                        <th>Hash (SHA-256)</th>
+                        <th>Tipo de Archivo</th>
+                        <th>Descripción</th>
+                        <th>Incidente Relacionado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="file-hash">f4e8a3f543f9d33cab681ebc524af50456879c5a18a847c7837a7385dcfa3dbe</td>
+                        <td>Ejecutable Windows (.exe)</td>
+                        <td class="description-cell">Malware principal, se ejecuta como servicio de sistema</td>
+                        <td class="victim-cell"><span class="incident-badge">Empresa Energética</span></td>
+                    </tr>
+                    <tr>
+                        <td class="file-hash">a7c9ca45f97b65cbc37d7a7b1b13c51f85e4f149c0b2e9a4ce9c6b8cf41c42f3</td>
+                        <td>Ejecutable Windows (.exe)</td>
+                        <td class="description-cell">Utilidad para desactivar EDR/AV</td>
+                        <td class="victim-cell"><span class="incident-badge">Empresa Energética</span></td>
+                    </tr>
+                    <tr>
+                        <td class="file-hash">2be86e8c39ef53a056b3bb1ec09a9e3366901f1b68b5b0f513b5dd433c0e2751</td>
+                        <td>Script Batch (.bat)</td>
+                        <td class="description-cell">Script para eliminar copias de seguridad en servidores</td>
+                        <td class="victim-cell"><span class="incident-badge">Institución Financiera</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Dominios y URLs de Comando y Control</h3>
+            <table class="ioc-table">
+                <thead>
+                    <tr>
+                        <th>URL/Dominio</th>
+                        <th>Tipo</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>hxxps://killsec-decrypt[.]onion</code></td>
+                        <td>Portal de pago</td>
+                        <td>Sitio para negociación de rescates (TOR)</td>
+                    </tr>
+                    <tr>
+                        <td><code>hxxps://killsec-leak[.]onion</code></td>
+                        <td>Blog de filtraciones</td>
+                        <td>Sitio donde publican datos exfiltrados de víctimas que no pagan</td>
+                    </tr>
+                    <tr>
+                        <td><code>hxxp://94.158.245[.]23:465</code></td>
+                        <td>C2 primario</td>
+                        <td>Servidor de comando y control principal</td>
+                    </tr>
+                    <tr>
+                        <td><code>hxxp://195.175.87[.]212:8070</code></td>
+                        <td>C2 secundario</td>
+                        <td>Servidor de respaldo</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Técnicas MITRE ATT&CK</h3>
+            <div>
+                <span class="technique-badge">T1190</span>Exploit Public-Facing Application<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1562.001</span>Impair Defenses: Disable or Modify Tools<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1047</span>Windows Management Instrumentation<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1083</span>File and Directory Discovery<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1222.001</span>File and Directory Permissions Modification: Windows File and Directory Permissions Modification<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            
+            <h3>Vulnerabilidades Explotadas</h3>
+            <div class="cve-box">
+                <div class="cve-id">CVE-2025-3042<span class="severity high">Crítica</span></div>
+                <div class="cve-details">Vulnerabilidad de ejecución remota de código en VPN Fortinet FortiOS. Permite a un atacante ejecutar código arbitrario en el sistema objetivo.</div>
+            </div>
+            <div class="cve-box">
+                <div class="cve-id">CVE-2024-34051<span class="severity medium">Media</span></div>
+                <div class="cve-details">Vulnerabilidad de escalada de privilegios en Windows Kernel. Permite a un atacante obtener privilegios elevados.</div>
+            </div>
+            
+            <h3>Extensiones de Archivos Cifrados</h3>
+            <code>.kill</code>, <code>.ksec</code>, <code>.locked</code>
+            
+            <div class="ioc-note">
+                <p><span class="highlight">Nota importante:</span> KillSec se especializa en atacar infraestructuras críticas, particularmente en el sector energético. Utiliza técnicas de movimiento lateral agresivas para maximizar el impacto en la red objetivo.</p>
+            </div>
+        </section>
+        
+        <section class="ioc-section medium-threat">
+            <div class="ioc-header">
+                <div class="group-icon">🐉</div>
+                <h2>Grupo DragonForce</h2>
+                <div class="threat-indicator medium">Amenaza Media</div>
+            </div>
+            <div class="ioc-date">Activo desde: Diciembre 2024 | Última actividad: 19 de marzo, 2025</div>
+            
+            <h3>Hashes de Archivos Maliciosos</h3>
+            <table class="ioc-table">
+                <thead>
+                    <tr>
+                        <th>Hash (SHA-256)</th>
+                        <th>Tipo de Archivo</th>
+                        <th>Descripción</th>
+                        <th>Incidente Relacionado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="file-hash">158c723b24d0f9ec7ef9177f746769a4ed1559e5b1733176b1614419aa5a2e55</td>
+                        <td>Documento Office (.docm)</td>
+                        <td class="description-cell">Documento de Word malicioso con macros que descarga el payload principal</td>
+                        <td class="victim-cell"><span class="incident-badge">Universidad Politécnica</span></td>
+                    </tr>
+                    <tr>
+                        <td class="file-hash">c72fe5b0e8f46c05b913e7ebc8dcd8794d719c7d32c60fa875f11f9babd11c26</td>
+                        <td>Ejecutable Windows (.exe)</td>
+                        <td class="description-cell">Loader que instala el ransomware principal</td>
+                        <td class="victim-cell"><span class="incident-badge">Universidad Politécnica</span></td>
+                    </tr>
+                    <tr>
+                        <td class="file-hash">e0d2c721a7a0e0bc6973c7c387ff2cdf9b0b3392db8b0ba03bc15879d337e33e</td>
+                        <td>DLL (.dll)</td>
+                        <td class="description-cell">Componente para operaciones de cifrado</td>
+                        <td class="victim-cell"><span class="incident-badge">Centro de Investigación</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Dominios y URLs de Comando y Control</h3>
+            <table class="ioc-table">
+                <thead>
+                    <tr>
+                        <th>URL/Dominio</th>
+                        <th>Tipo</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>hxxp://dragonforce-decryptor[.]com</code></td>
+                        <td>Portal de pago</td>
+                        <td>Sitio de negociación (clearnet) que redirecciona a un portal .onion</td>
+                    </tr>
+                    <tr>
+                        <td><code>hxxps://dragonfrc-leaks[.]onion</code></td>
+                        <td>Blog de filtraciones</td>
+                        <td>Sitio donde publican datos robados</td>
+                    </tr>
+                    <tr>
+                        <td><code>hxxps://cdn-dragon[.]eu-static[.]info</code></td>
+                        <td>Distribución</td>
+                        <td>Hospeda payloads secundarios</td>
+                    </tr>
+                    <tr>
+                        <td><code>hxxp://45.153.241[.]181:8431</code></td>
+                        <td>C2 primario</td>
+                        <td>Infraestructura C2 principal</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Técnicas MITRE ATT&CK</h3>
+            <div>
+                <span class="technique-badge">T1566.001</span>Phishing: Adjuntos de correo electrónico<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1204.002</span>User Execution: Malicious File<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1059.003</span>Command and Scripting Interpreter: Windows Command Shell<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1486</span>Data Encrypted for Impact<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            
+            <h3>Vulnerabilidades Explotadas</h3>
+            <div class="cve-box">
+                <div class="cve-id">CVE-2024-41327<span class="severity medium">Media</span></div>
+                <div class="cve-details">Vulnerabilidad de ejecución remota de código en Microsoft Office. Permite la ejecución de macros maliciosas sin notificar adecuadamente al usuario.</div>
+            </div>
+            
+            <h3>Extensiones de Archivos Cifrados</h3>
+            <code>.dragon</code>, <code>.dforce</code>, <code>.encrypted</code>
+            
+            <div class="ioc-note">
+                <p><span class="highlight">Nota importante:</span> DragonForce se centra principalmente en el sector educativo y de investigación, buscando propiedad intelectual valiosa. Utiliza tácticas avanzadas de evasión y sus campañas de phishing suelen estar altamente personalizadas.</p>
+            </div>
+        </section>
+        
+        <section class="ioc-section medium-threat">
+            <div class="ioc-header">
+                <div class="group-icon">🦊</div>
+                <h2>Grupo Black Basta</h2>
+                <div class="threat-indicator medium">Amenaza Media</div>
+            </div>
+            <div class="ioc-date">Activo desde: 2022 | Última actividad: 24 de marzo, 2025</div>
+            
+            <h3>Framework BRUTED</h3>
+            <p>Black Basta ha estado utilizando un framework automatizado de fuerza bruta llamado BRUTED para comprometer dispositivos de borde de red:</p>
+            
+            <h3>Hashes de Archivos Maliciosos</h3>
+            <table class="ioc-table">
+                <thead>
+                    <tr>
+                        <th>Hash (SHA-256)</th>
+                        <th>Tipo de Archivo</th>
+                        <th>Descripción</th>
+                        <th>Incidente Relacionado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="file-hash">15f5acd23374dc1a36cb93f5d9097d0befacb176d9dedb938ad93e3f0b482a46</td>
+                        <td>Ejecutable Linux (.elf)</td>
+                        <td class="description-cell">Componente principal del framework BRUTED</td>
+                        <td class="victim-cell"><span class="incident-badge">Cadena Alimentaria</span></td>
+                    </tr>
+                    <tr>
+                        <td class="file-hash">ba7f94a063049c3e9b39c4851c945b3cd7b5ca3149c477848cc4f369c70edc33</td>
+                        <td>Python (.py)</td>
+                        <td class="description-cell">Script de escaneo para VPNs vulnerables</td>
+                        <td class="victim-cell"><span class="incident-badge">Cadena Alimentaria</span></td>
+                    </tr>
+                    <tr>
+                        <td class="file-hash">2d36752a329b96ed769714ab6f12b65bc8fe7eba7be745892aca9f1596c09414</td>
+                        <td>Ejecutable Windows (.exe)</td>
+                        <td class="description-cell">Ransomware principal de Black Basta</td>
+                        <td class="victim-cell"><span class="incident-badge">Empresa Logística</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Dominios y URLs de Comando y Control</h3>
+            <table class="ioc-table">
+                <thead>
+                    <tr>
+                        <th>URL/Dominio</th>
+                        <th>Tipo</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>hxxps://blackbasta[.]org</code></td>
+                        <td>Sitio de redirección</td>
+                        <td>Redirecciona a portal .onion</td>
+                    </tr>
+                    <tr>
+                        <td><code>hxxp://bastad6aulkzexnucdzgmioyohouhtgan5v7lkp7k2tdxinjgvmvxdqd[.]onion</code></td>
+                        <td>Portal de pago</td>
+                        <td>Sitio principal para negociación de rescates (TOR)</td>
+                    </tr>
+                    <tr>
+                        <td><code>hxxp://bastaleak6hvdutmsqnvdviujrgwl3t3njfwcwifmdkrwxsimcqnwbgyd[.]onion</code></td>
+                        <td>Blog de filtraciones</td>
+                        <td>Sitio de filtraciones de datos robados</td>
+                    </tr>
+                    <tr>
+                        <td><code>hxxp://89.67.122[.]35:443</code></td>
+                        <td>C2 para BRUTED</td>
+                        <td>Servidor de control para el framework BRUTED</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Técnicas MITRE ATT&CK</h3>
+            <div>
+                <span class="technique-badge">T1110.001</span>Brute Force: Password Guessing<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1133</span>External Remote Services<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1078.004</span>Valid Accounts: Cloud Accounts<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1071.001</span>Application Layer Protocol: Web Protocols<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1486</span>Data Encrypted for Impact<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            
+            <h3>Dispositivos VPN Objetivo</h3>
+            <ul>
+                <li>Cisco ASA VPN</li>
+                <li>Fortinet FortiGate</li>
+                <li>Pulse Secure VPN</li>
+                <li>SonicWall SMA</li>
+                <li>Palo Alto GlobalProtect</li>
+            </ul>
+            
+            <h3>Extensiones de Archivos Cifrados</h3>
+            <code>.basta</code>, <code>.bbsta</code>
+            
+            <div class="ioc-note">
+                <p><span class="highlight">Nota importante:</span> El framework BRUTED de Black Basta utiliza rotación de proxies, generación automatizada de credenciales y ejecución distribuida para escalar ataques. Se recomienda implementar autenticación multifactor en todas las VPNs y servicios de acceso remoto.</p>
+            </div>
+        </section>
+        
+        <section class="ioc-section medium-threat">
+            <div class="ioc-header">
+                <div class="group-icon">🔐</div>
+                <h2>Grupo LockBit</h2>
+                <div class="threat-indicator medium">Amenaza Media</div>
+            </div>
+            <div class="ioc-date">Activo desde: 2019 | Última actividad: 15 de marzo, 2025</div>
+            
+            <h3>Hashes de Archivos Maliciosos</h3>
+            <table class="ioc-table">
+                <thead>
+                    <tr>
+                        <th>Hash (SHA-256)</th>
+                        <th>Tipo de Archivo</th>
+                        <th>Descripción</th>
+                        <th>Incidente Relacionado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="file-hash">50fc27988a0c8e4a97913aecd2d1da9657cb954cfb641437f7bf762d66d92f14</td>
+                        <td>Ejecutable Windows (.exe)</td>
+                        <td class="description-cell">Nueva variante de LockBit (v4.0) observada en marzo 2025</td>
+                        <td class="victim-cell"><span class="incident-badge">Banco Regional</span></td>
+                    </tr>
+                    <tr>
+                        <td class="file-hash">1aeed567a2a5fa4da69064b409a3dbd3298b58ce57e4b0203e67df962cf4b4ab</td>
+                        <td>DLL (.dll)</td>
+                        <td class="description-cell">Componente de elevación de privilegios</td>
+                        <td class="victim-cell"><span class="incident-badge">Banco Regional</span></td>
+                    </tr>
+                    <tr>
+                        <td class="file-hash">8ef5eefa7a1bf2b5e71bc9d43b785d91f88c93773f32e6e4a2d0e16e1f874355</td>
+                        <td>PowerShell (.ps1)</td>
+                        <td class="description-cell">Script para desactivar Windows Defender</td>
+                        <td class="victim-cell"><span class="incident-badge">Empresa Inmobiliaria</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Dominios y URLs de Comando y Control</h3>
+            <table class="ioc-table">
+                <thead>
+                    <tr>
+                        <th>URL/Dominio</th>
+                        <th>Tipo</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>hxxp://lockbitapt6vx57t3eeqjofwgcglmutr3a35nygvokja5uuccip4ykyd[.]onion</code></td>
+                        <td>Portal de pago</td>
+                        <td>Nueva versión del portal de negociación (TOR)</td>
+                    </tr>
+                    <tr>
+                        <td><code>hxxp://lockbit7z2jwcskxpbokpemdxmltipntwlkmidcll2qirbu7yopnxgad[.]onion</code></td>
+                        <td>Blog de filtraciones</td>
+                        <td>Sitio donde publican datos exfiltrados de víctimas</td>
+                    </tr>
+                    <tr>
+                        <td><code>hxxp://lockbitfile3q7iw6k2m36e4rmzf5ulqte3l3zryuborc2lt6l2x2zyid[.]onion</code></td>
+                        <td>Alojamiento de archivos</td>
+                        <td>Sitio para compartir pruebas de datos robados</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Técnicas MITRE ATT&CK</h3>
+            <div>
+                <span class="technique-badge">T1566.002</span>Phishing: Spearphishing Link<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1055.001</span>Process Injection: Dynamic-link Library Injection<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1562.001</span>Impair Defenses: Disable or Modify Tools<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1486</span>Data Encrypted for Impact<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            <div>
+                <span class="technique-badge">T1490</span>Inhibit System Recovery<a class="mitre-link" href="#" target="_blank">↗</a>
+            </div>
+            
+            <h3>Extensiones de Archivos Cifrados</h3>
+            <code>.lockbit</code>, <code>.lckbt</code>
+            
+            <div class="ioc-note">
+                <p><span class="highlight">Nota importante:</span> La actividad de LockBit en España ha disminuido en comparación con los meses anteriores, pero el grupo sigue siendo una amenaza significativa. Han actualizado su ransomware a la versión 4.0, con mejoras en la velocidad de cifrado y técnicas de evasión.</p>
+            </div>
+        </section>
+        
+        <div class="footer">
+            <div class="footer-content">
+                <p>Datos actualizados a 31 de marzo de 2025 | CERT-ES</p>
+                <p class="disclaimer">Los IOCs proporcionados deben ser validados en su entorno antes de su implementación. La información se proporciona "tal cual", sin garantías.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
