@@ -1,11 +1,17 @@
 import os
 
-EXCLUDE = {"index.html"}
+def encontrar_paginas_html(root_dir="."):
+    html_pages = []
+    for folder, _, files in os.walk(root_dir):
+        for file in files:
+            if file.endswith(".html") and file != "index.html":
+                relative_path = os.path.relpath(os.path.join(folder, file), root_dir)
+                html_pages.append(relative_path.replace("\\", "/"))  # Por si es Windows
+    return sorted(html_pages)
 
-def generar_index():
-    archivos = [f for f in os.listdir(".") if f.endswith(".html") and f not in EXCLUDE]
-
-    html = """<!DOCTYPE html>
+def generar_index(paginas):
+    with open("index.html", "w", encoding="utf-8") as f:
+        f.write("""<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -49,20 +55,14 @@ def generar_index():
 <body>
   <h1>📄 Páginas del Sitio</h1>
   <ul>
-"""
-
-    for archivo in sorted(archivos):
-        nombre = archivo.replace(".html", "").capitalize()
-        html += f'    <li><a href="{archivo}">{nombre}</a></li>\n'
-
-    html += """  </ul>
+""")
+        for pagina in paginas:
+            nombre = pagina.split("/")[-1]
+            f.write(f'    <li><a href="{pagina}">{nombre}</a></li>\n')
+        f.write("""  </ul>
 </body>
-</html>"""
-
-    with open("index.html", "w", encoding="utf-8") as f:
-        f.write(html)
-
-    print("✨ index.html generado con estilo.")
+</html>""")
 
 if __name__ == "__main__":
-    generar_index()
+    paginas = encontrar_paginas_html()
+    generar_index(paginas)
