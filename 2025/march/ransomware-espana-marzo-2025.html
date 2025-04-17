@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ataques de Ransomware en España - Marzo 2025</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #e74c3c;
+            --tertiary: #3498db;
+            --accent: #f39c12;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --success: #2ecc71;
+            --warning: #f1c40f;
+            --danger: #c0392b;
+            --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.05),
+                rgba(255, 255, 255, 0.05) 10px,
+                rgba(255, 255, 255, 0) 10px,
+                rgba(255, 255, 255, 0) 20px
+            );
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+            margin-top: 40px;
+            display: flex;
+            align-items: center;
+        }
+        
+        h2::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background-color: var(--secondary);
+            display: inline-block;
+            margin-right: 10px;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+        
+        .highlight-box {
+            background-color: var(--light);
+            border-left: 5px solid var(--secondary);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease;
+            border-top: 5px solid var(--tertiary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--tertiary), var(--secondary), var(--accent));
+            background-size: 200% 100%;
+            animation: gradientShift 5s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: var(--tertiary);
+        }
+        
+        .stat-card.danger .number {
+            color: var(--secondary);
+        }
+        
+        .stat-card.warning .number {
+            color: var(--accent);
+        }
+        
+        .stat-card.success .number {
+            color: var(--success);
+        }
+        
+        .stat-card .label {
+            font-size: 1rem;
+            color: #666;
+        }
+        
+        .groups-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .ransomware-group {
+            flex: 1;
+            min-width: 200px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ransomware-group::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: var(--tertiary);
+        }
+        
+        .ransomware-group:nth-child(2n)::before {
+            background-color: var(--secondary);
+        }
+        
+        .ransomware-group:nth-child(3n)::before {
+            background-color: var(--accent);
+        }
+        
+        .ransomware-group:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .group-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .group-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        .threat-level {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .threat-high {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .threat-medium {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        .threat-low {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .incident-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .incident-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease;
+            border-top: 5px solid var(--primary);
+        }
+        
+        .incident-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .incident-header {
+            padding: 15px;
+            background-color: var(--light);
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .incident-title {
+            margin: 0;
+            font-size: 1.3rem;
+            color: var(--primary);
+        }
+        
+        .incident-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: #777;
+        }
+        
+        .incident-content {
+            padding: 15px;
+        }
+        
+        .incident-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-right: 5px;
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        
+        .impact {
+            font-weight: bold;
+        }
+        
+        .impact.high {
+            color: var(--danger);
+        }
+        
+        .impact.medium {
+            color: var(--accent);
+        }
+        
+        .impact.low {
+            color: var(--success);
+        }
+        
+        .impact-meter {
+            height: 6px;
+            width: 100%;
+            background-color: #eee;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .impact-level {
+            height: 100%;
+            border-radius: 3px;
+        }
+        
+        .impact-high {
+            background-color: var(--danger);
+            width: 90%;
+        }
+        
+        .impact-medium {
+            background-color: var(--accent);
+            width: 60%;
+        }
+        
+        .impact-low {
+            background-color: var(--success);
+            width: 30%;
+        }
+        
+        .sectors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .sector-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-top: 5px solid var(--tertiary);
+        }
+        
+        .sector-card:nth-child(2n) {
+            border-top-color: var(--secondary);
+        }
+        
+        .sector-card:nth-child(3n) {
+            border-top-color: var(--accent);
+        }
+        
+        .sector-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .sector-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--tertiary);
+        }
+        
+        .sector-card:nth-child(2n) .sector-icon {
+            color: var(--secondary);
+        }
+        
+        .sector-card:nth-child(3n) .sector-icon {
+            color: var(--accent);
+        }
+        
+        .sector-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .trends-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 40px;
+        }
+        
+        .trend-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .trend-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .trend-icon {
+            font-size: 1.8rem;
+            margin-right: 15px;
+            color: var(--dark);
+            line-height: 1;
+            padding-top: 4px;
+        }
+        
+        .trend-text {
+            flex: 1;
+        }
+        
+        .trend-title {
+            font-weight: bold;
+            margin: 0 0 5px 0;
+            color: var(--primary);
+        }
+        
+        .map-container {
+            height: 400px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .map-image {
+            width: 100%;
+            height: 100%;
+            background-image: url('/api/placeholder/800/400');
+            background-position: center;
+            background-size: cover;
+            border-radius: 4px;
+            position: relative;
+        }
+        
+        .map-point {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            box-shadow: 0 0 0 5px rgba(231, 76, 60, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+            }
+        }
+        
+        .map-point.high {
+            background-color: var(--danger);
+            box-shadow: 0 0 0 5px rgba(192, 57, 43, 0.3);
+        }
+        
+        .map-point.medium {
+            background-color: var(--accent);
+            box-shadow: 0 0 0 5px rgba(243, 156, 18, 0.3);
+        }
+        
+        .map-point.low {
+            background-color: var(--success);
+            box-shadow: 0 0 0 5px rgba(46, 204, 113, 0.3);
+        }
+        
+        .map-tooltip {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--dark);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+        
+        .map-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--dark) transparent transparent transparent;
+        }
+        
+        .map-point:hover .map-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .mitigation-steps {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 40px;
+        }
+        
+        .step-container {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .step-container:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--tertiary);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+        
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            border-radius: 8px;
+            margin-top: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.05),
+                rgba(255, 255, 255, 0.05) 10px,
+                rgba(255, 255, 255, 0) 10px,
+                rgba(255, 255, 255, 0) 20px
+            );
+        }
+        
+        .footer-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        @media screen and (max-width: 768px) {
+            .incident-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .sectors-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .trend-item {
+                flex-direction: column;
+            }
+            
+            .trend-icon {
+                margin-bottom: 10px;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ataques de Ransomware en España</h1>
+            <div class="subtitle">Informe de Marzo 2025</div>
+        </header>
+        
+        <section>
+            <h2>Panorama General - Marzo 2025</h2>
+            <div class="highlight-box">
+                Marzo de 2025 ha mostrado un alarmante incremento en los incidentes de ransomware en España, consolidando la tendencia de crecimiento observada desde principios de año. Los ataques se han vuelto más sofisticados y han afectado de manera significativa a sectores críticos de la economía española.
+            </div>
+            
+            <div class="dashboard">
+                <div class="stat-card danger">
+                    <div class="number">+35%</div>
+                    <div class="label">Incremento de ataques respecto al mes anterior</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">23</div>
+                    <div class="label">Incidentes reportados en marzo</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="number">3.1M€</div>
+                    <div class="label">Coste medio por ataque</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="number">6º</div>
+                    <div class="label">Posición mundial en ataques (↑2 posiciones)</div>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>Principales Grupos Activos en Marzo 2025</h2>
+            <div class="groups-container">
+                <div class="ransomware-group">
+                    <div class="group-icon">🔒</div>
+                    <div class="group-name">Meow</div>
+                    <p>Nuevo grupo emergente con 7 ataques en España</p>
+                    <span class="threat-level threat-high">Amenaza Alta</span>
+                </div>
+                <div class="ransomware-group">
+                    <div class="group-icon">⚡</div>
+                    <div class="group-name">KillSec</div>
+                    <p>Especializado en ataques a infraestructuras críticas</p>
+                    <span class="threat-level threat-high">Amenaza Alta</span>
+                </div>
+                <div class="ransomware-group">
+                    <div class="group-icon">🐉</div>
+                    <div class="group-name">DragonForce</div>
+                    <p>Nuevo actor con tácticas sofisticadas de evasión</p>
+                    <span class="threat-level threat-medium">Amenaza Media</span>
+                </div>
+                <div class="ransomware-group">
+                    <div class="group-icon">🔐</div>
+                    <div class="group-name">LockBit</div>
+                    <p>Continúa activo con nuevas variantes</p>
+                    <span class="threat-level threat-medium">Amenaza Media</span>
+                </div>
+                <div class="ransomware-group">
+                    <div class="group-icon">🦊</div>
+                    <div class="group-name">Black Basta</div>
+                    <p>Utiliza el framework BRUTED para acceso inicial</p>
+                    <span class="threat-level threat-medium">Amenaza Media</span>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>Incidentes Destacados - Marzo 2025</h2>
+            <div class="incident-cards">
+                <div class="incident-card">
+                    <div class="incident-header">
+                        <h3 class="incident-title">Ataque al Sistema Sanitario de Madrid</h3>
+                        <div class="incident-meta">
+                            <span>5 de marzo, 2025</span>
+                            <span>Grupo: Meow</span>
+                        </div>
+                    </div>
+                    <div class="incident-content">
+                        <p>El sistema de información sanitaria de la Comunidad de Madrid sufrió un ataque de ransomware que afectó a más de 30 hospitales y centros de salud. El ataque comprometió sistemas de gestión de citas y expedientes médicos electrónicos.</p>
+                        <div class="impact-meter">
+                            <div class="impact-level impact-high"></div>
+                        </div>
+                    </div>
+                    <div class="incident-footer">
+                        <div>
+                            <span class="tag">Sector Sanitario</span>
+                            <span class="tag">Datos Personales</span>
+                        </div>
+                        <div class="impact high">Impacto Crítico</div>
+                    </div>
+                </div>
+                
+                <div class="incident-card">
+                    <div class="incident-header">
+                        <h3 class="incident-title">Ataque a Empresa Energética Nacional</h3>
+                        <div class="incident-meta">
+                            <span>12 de marzo, 2025</span>
+                            <span>Grupo: KillSec</span>
+                        </div>
+                    </div>
+                    <div class="incident-content">
+                        <p>Una importante empresa energética española fue víctima de un sofisticado ataque que afectó a sus sistemas de monitorización y control. El ransomware cifró datos críticos y exigió un rescate de 5 millones de euros.</p>
+                        <div class="impact-meter">
+                            <div class="impact-level impact-high"></div>
+                        </div>
+                    </div>
+                    <div class="incident-footer">
+                        <div>
+                            <span class="tag">Sector Energético</span>
+                            <span class="tag">Infraestructura Crítica</span>
+                        </div>
+                        <div class="impact high">Impacto Crítico</div>
+                    </div>
+                </div>
+                
+                <div class="incident-card">
+                    <div class="incident-header">
+                        <h3 class="incident-title">Ataque a Universidad Politécnica</h3>
+                        <div class="incident-meta">
+                            <span>19 de marzo, 2025</span>
+                            <span>Grupo: DragonForce</span>
+                        </div>
+                    </div>
+                    <div class="incident-content">
+                        <p>El sistema de datos de una importante universidad politécnica fue secuestrado, cifrando información confidencial, incluyendo trabajos de investigación e información de estudiantes y personal. Los atacantes exigieron un rescate de 2 millones de euros.</p>
+                        <div class="impact-meter">
+                            <div class="impact-level impact-medium"></div>
+                        </div>
+                    </div>
+                    <div class="incident-footer">
+                        <div>
+                            <span class="tag">Sector Educativo</span>
+                            <span class="tag">Datos Investigación</span>
+                        </div>
+                        <div class="impact medium">Impacto Alto</div>
+                    </div>
+                </div>
+                
+                <div class="incident-card">
+                    <div class="incident-header">
+                        <h3 class="incident-title">Ataque a Cadena de Suministro Alimentario</h3>
+                        <div class="incident-meta">
+                            <span>24 de marzo, 2025</span>
+                            <span>Grupo: Black Basta</span>
+                        </div>
+                    </div>
+                    <div class="incident-content">
+                        <p>Una importante cadena de distribución alimentaria sufrió un ataque que paralizó sus sistemas logísticos durante 72 horas. Los atacantes utilizaron el framework BRUTED para acceder a través de VPNs corporativas comprometidas.</p>
+                        <div class="impact-meter">
+                            <div class="impact-level impact-medium"></div>
+                        </div>
+                    </div>
+                    <div class="incident-footer">
+                        <div>
+                            <span class="tag">Sector Alimentario</span>
+                            <span class="tag">Logística</span>
+                        </div>
+                        <div class="impact medium">Impacto Alto</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>Distribución Geográfica - Marzo 2025</h2>
+            <div class="map-container">
+                <div class="map-image">
+                    <!-- Puntos simulados en un mapa de España -->
+                    <div class="map-point high" style="top: 35%; left: 50%;">
+                        <div class="map-tooltip">Madrid: 8 ataques</div>
+                    </div>
+                    <div class="map-point medium" style="top: 30%; left: 80%;">
+                        <div class="map-tooltip">Barcelona: 5 ataques</div>
+                    </div>
+                    <div class="map-point medium" style="top: 70%; left: 45%;">
+                        <div class="map-tooltip">Sevilla: 3 ataques</div>
+                    </div>
+                    <div class="map-point low" style="top: 55%; left: 75%;">
+                        <div class="map-tooltip">Valencia: 2 ataques</div>
+                    </div>
+                    <div class="map-point low" style="top: 77%; left: 65%;">
+                        <div class="map-tooltip">Málaga: 2 ataques</div>
+                    </div>
+                    <div class="map-point low" style="top: 20%; left: 15%;">
+                        <div class="map-tooltip">Galicia: 2 ataques</div>
+                    </div>
+                    <div class="map-point low" style="top: 15%; left: 65%;">
+                        <div class="map-tooltip">País Vasco: 1 ataque</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>Sectores Más Afectados - Marzo 2025</h2>
+            <div class="sectors-grid">
+                <div class="sector-card">
+                    <div class="sector-icon">🏥</div>
+                    <div class="sector-name">Sanitario</div>
+                    <p>7 ataques</p>
+                    <p>Principal objetivo en marzo</p>
+                </div>
+                <div class="sector-card">
+                    <div class="sector-icon">⚡</div>
+                    <div class="sector-name">Energético</div>
+                    <p>5 ataques</p>
+                    <p>Infraestructuras críticas</p>
+                </div>
+                <div class="sector-card">
+                    <div class="sector-icon">🎓</div>
+                    <div class="sector-name">Educativo</div>
+                    <p>4 ataques</p>
+                    <p>Universidades y centros de investigación</p>
+                </div>
+                <div class="sector-card">
+                    <div class="sector-icon">🏦</div>
+                    <div class="sector-name">Financiero</div>
+                    <p>3 ataques</p>
+                    <p>Entidades bancarias medianas</p>
+                </div>
+                <div class="sector-card">
+                    <div class="sector-icon">🛒</div>
+                    <div class="sector-name">Distribución</div>
+                    <p>3 ataques</p>
+                    <p>Cadenas logísticas y alimentarias</p>
+                </div>
+                <div class="sector-card">
+                    <div class="sector-icon">🏛️</div>
+                    <div class="sector-name">Administración</div>
+                    <p>1 ataque</p>
+                    <p>Ayuntamientos</p>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>Tendencias Observadas - Marzo 2025</h2>
+            <div class="trends-container">
+                <div class="trend-item">
+                    <div class="trend-icon">🩺</div>
+                    <div class="trend-text">
+                        <h4 class="trend-title">Aumento de ataques al sector sanitario</h4>
+                        <p>Los ciberataques al sector sanitario han experimentado un crecimiento del 150% respecto al mes anterior, superando la media de 2.361 ataques semanales por organización. Los ataques de ransomware a hospitales se han disparado, pues este sector, de media, es el que más paga el rescate, que ronda los 400.000 euros.</p>
+                    </div>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-icon">🧠</div>
+                    <div class="trend-text">
+                        <h4 class="trend-title">Ransomware potenciado por IA</h4>
+                        <p>Se ha detectado un incremento en el uso de técnicas de inteligencia artificial para mejorar la efectividad de los ataques. Los nuevos grupos como Meow y KillSec están utilizando modelos de IA para analizar redes, personalizar ataques y evadir defensas tradicionales.</p>
+                    </div>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-icon">🚪</div>
+                    <div class="trend-text">
+                        <h4 class="trend-title">Vulnerabilidades sin parchar</h4>
+                        <p>Aproximadamente el 32% de los incidentes de ransomware registrados en marzo se originaron en vulnerabilidades sin parchar, lo que ilustra una falla continua en la higiene cibernética, ya que muchas organizaciones aún luchan por gestionar el parcheo en entornos digitales complejos.</p>
+                    </div>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-icon">📱</div>
+                    <div class="trend-text">
+                        <h4 class="trend-title">Nuevos vectores de ataque móvil</h4>
+                        <p>Se ha identificado un nuevo vector de ataque que explota las aplicaciones web progresivas (PWA) y los WebAPK para comprometer dispositivos móviles Android e iOS, eludiendo medidas de seguridad estándar en estos dispositivos.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>Medidas de Mitigación Recomendadas</h2>
+            <div class="mitigation-steps">
+                <div class="step-container">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Actualización inmediata de sistemas críticos</div>
+                        <p>Priorizar la instalación de parches de seguridad, especialmente para las vulnerabilidades explotadas en los ataques de marzo (CVE-2025-0578, CVE-2025-1247 y CVE-2025-3042).</p>
+                    </div>
+                </div>
+                <div class="step-container">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Refuerzo de autenticación multifactor</div>
+                        <p>Implementar MFA en todos los puntos de acceso remoto, especialmente VPNs y servicios en la nube, para contrarrestar las técnicas del framework BRUTED utilizadas por Black Basta.</p>
+                    </div>
+                </div>
+                <div class="step-container">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Segmentación de redes críticas</div>
+                        <p>Implementar o revisar la segmentación de redes, especialmente en sectores sanitarios y energéticos, para contener posibles infecciones y limitar el movimiento lateral.</p>
+                    </div>
+                </div>
+                <div class="step-container">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Actualizar estrategias de backup</div>
+                        <p>Revisar y actualizar políticas de copias de seguridad, asegurando la implementación del principio 3-2-1 (tres copias, en dos medios diferentes, con una copia fuera de línea).</p>
+                    </div>
+                </div>
+                <div class="step-container">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <div class="step-title">Formación específica contra nuevas tácticas</div>
+                        <p>Realizar formaciones específicas sobre los nuevos vectores de ataque detectados en marzo, especialmente los relacionados con aplicaciones web progresivas y dispositivos móviles.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            <div class="footer-content">
+                <p>Datos actualizados a 31 de marzo de 2025 | Basado en información de OpenCTI y fuentes públicas</p>
+                <p>Este informe incluye datos recopilados de incidentes reportados a autoridades y CERT españoles</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
