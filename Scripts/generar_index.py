@@ -1,68 +1,86 @@
 import os
 
-def encontrar_paginas_html(root_dir="."):
-    html_pages = []
-    for folder, _, files in os.walk(root_dir):
-        for file in files:
-            if file.endswith(".html") and file != "index.html":
-                relative_path = os.path.relpath(os.path.join(folder, file), root_dir)
-                html_pages.append(relative_path.replace("\\", "/"))  # Por si es Windows
-    return sorted(html_pages)
+def agrupar_por_directorio(root_dir="."):
+    estructura = {}
+    for carpeta_actual, _, archivos in os.walk(root_dir):
+        for archivo in archivos:
+            if archivo.endswith(".html") and archivo != "index.html":
+                ruta_relativa = os.path.relpath(os.path.join(carpeta_actual, archivo), root_dir)
+                ruta_relativa = ruta_relativa.replace("\\", "/")  # Windows friendly
+                carpeta = os.path.dirname(ruta_relativa)
+                if carpeta not in estructura:
+                    estructura[carpeta] = []
+                estructura[carpeta].append((archivo, ruta_relativa))
+    return estructura
 
-def generar_index(paginas):
+def generar_index(estructura):
     with open("index.html", "w", encoding="utf-8") as f:
         f.write("""<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Índice del Sitio</title>
+  <title>Índice de Reportes CTI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f2f5;
-      color: #333;
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #111827;
+      margin: 0;
       padding: 2rem;
     }
     h1 {
       text-align: center;
-      color: #2c3e50;
+      color: #1f2937;
+      margin-bottom: 3rem;
+    }
+    .carpeta {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .carpeta h2 {
+      font-size: 1.2rem;
+      color: #2563eb;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 0.5rem;
     }
     ul {
-      max-width: 600px;
-      margin: 2rem auto;
-      padding: 0;
       list-style: none;
+      padding-left: 1rem;
     }
     li {
-      background: white;
-      margin: 0.5rem 0;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      transition: transform 0.2s ease;
-    }
-    li:hover {
-      transform: scale(1.02);
+      margin: 0.4rem 0;
     }
     a {
+      color: #111827;
       text-decoration: none;
-      color: #2980b9;
-      font-weight: bold;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    a:hover {
+      color: #2563eb;
     }
   </style>
 </head>
 <body>
-  <h1>📄 Páginas del Sitio</h1>
-  <ul>
+  <h1>📊 Índice de Reportes CTI</h1>
 """)
-        for pagina in paginas:
-            nombre = pagina.split("/")[-1]
-            f.write(f'    <li><a href="{pagina}">{nombre}</a></li>\n')
-        f.write("""  </ul>
-</body>
-</html>""")
+        for carpeta, archivos in sorted(estructura.items()):
+            f.write(f'  <div class="carpeta">\n')
+            f.write(f'    <h2>📁 {carpeta}</h2>\n')
+            f.write('    <ul>\n')
+            for nombre, ruta in sorted(archivos):
+                f.write(f'      <li><a href="{ruta}">{nombre}</a></li>\n')
+            f.write('    </ul>\n')
+            f.write('  </div>\n')
+        f.write("</body>\n</html>")
 
 if __name__ == "__main__":
-    paginas = encontrar_paginas_html()
-    generar_index(paginas)
+    estructura = agrupar_por_directorio()
+    generar_index(estructura)
